@@ -1,4 +1,8 @@
 def main():
+
+
+
+    s = 'dddd'
     print("Hello from myproject!")
 
 
