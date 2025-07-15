@@ -1,8 +1,6 @@
-# save this as app.py
-from flask import Flask
+def main():
+    print("Hello from myproject!")
 
-app = Flask(__name__)
 
-@app.route("/")
-def hello():
-    return "Hello, World!"
+if __name__ == "__main__":
+    main()
