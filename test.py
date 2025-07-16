@@ -42,3 +42,32 @@
 
 # scope_test()
 # print("In global scope:", spam)
+
+# def test():
+#     a = int(input("请输入第一个整数的值："))
+#     b = int(input("请输入第二个整数的值："))
+#     sum1 = a + b
+#     sum2 = a - b
+#     print(f"第一个整数和第二个整数的和为:{a}+{b}={sum1}")
+#     print(f"第一个整数和第二个整数的差为:{a}-{b}={sum2}")
+
+
+# if __name__ == "__main__":
+#     test()
+
+# def jc():
+#     n = int(input("请输入一个自然数："))
+#     factorial = 1
+
+#     if n < 0:
+#         print("错误：自然数必须 ≥ 0！")
+#     elif n == 0:
+#         print("0! = 1")
+#     else:
+#         for i in range(1, n + 1):
+#             factorial *= i
+#             print(f"{n}! = {factorial}")
+
+
+# if __name__ == "__main__":
+#     jc()
