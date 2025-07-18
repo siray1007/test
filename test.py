@@ -55,7 +55,7 @@
 # if __name__ == "__main__":
 #     test()
 
-# def jc():
+# def factorial():
 #     n = int(input("请输入一个自然数："))
 #     factorial = 1
 
@@ -70,4 +70,67 @@
 
 
 # if __name__ == "__main__":
-#     jc()
+#     factorial()
+
+# sname = 'siray'
+# sage = 20
+# # print("我的英文名叫%s,年龄%d" % (sname, sage))
+
+# sname = 'siray'
+# sage = 20
+# print("我的英文名叫{},年龄{}".format(sname, sage))
+
+# sname = 'siray'
+# sage = 20
+# print(f'我的英文名叫{sname},年龄{sage}')
+
+# a = int(input('请输入第1个数：'))
+# b = int(input('请输入第2个数：'))
+# c = int(input('请输入第3个数：'))
+# d = int(input('请输入第4个数：'))
+
+
+# def find_max():
+#     max = a
+#     if b > a:
+#         max = b
+#     if c > max:
+#         max = c
+#     if d > max:
+#         max = d
+#     return max
+
+
+# if __name__ == "__main__":
+#     max = find_max()
+
+# print(f'四个数中最大的为：{max}')
+
+
+# def lucky_num():
+#     num = int(input('请输入一个四位数的数字：'))
+#     a = (num // 1000) % 10
+#     b = (num // 100) % 10
+#     c = (num // 10) % 10
+#     d = num % 10
+#     if b > a and d == (b + a + c):
+#         print(num, "是幸运数字")
+#     else:
+#         print(num, "不是幸运数字")
+
+
+# if __name__ == "__main__":
+#     lucky_num()
+
+# def count_7():
+#     count = 0
+#     for i in range(1, 101):
+#         if i % 7 == 0 or i % 10 == 7:
+#             print(i, end=' ')
+#             count = count + 1
+#             if count % 5 == 0:
+#                 print()
+
+
+# if __name__ == "__main__":
+#     count_7()
