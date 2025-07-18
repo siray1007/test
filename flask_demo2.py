@@ -15,7 +15,7 @@ def hello():
 
 @app.route('/user/<name>')
 def user_page(name):
-    return 'User: %s' % name
+    return f'User:{name}'
 
 
 @app.route('/test')
