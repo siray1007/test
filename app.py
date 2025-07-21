@@ -39,6 +39,17 @@ def welcome():
     return 'Welcome to My Watchlist!'
 
 
+@app.context_processor  # 模板上下文处理函数
+def inject_user():
+    user = User.query.first()
+    return dict(user=user)
+
+
+@app.errorhandler(404)  # 错误处理函数
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
 @app.route('/')
 def index():
     user = User.query.first()  # 读取用户记录
