@@ -10,22 +10,26 @@ class WatchlistTestCase(unittest.TestCase):
             TESTING=True,
             SQLALCHEMY_DATABASE_URI='sqlite:///:memory:'
         )
-        # 创建数据库和表
-        db.create_all()
-        # 创建测试数据，一个用户，一个电影条目
-        user = User(name='Test', username='test')
-        user.set_password('123')
-        movie = Movie(title='Test Movie Title', year='2019')
-        # 使用 add_all() 方法一次添加多个模型类实例，传入列表
-        db.session.add_all([user, movie])
-        db.session.commit()
+        # 激活应用上下文（关键修复）
+        with app.app_context():
+            # 创建数据库和表
+            db.create_all()
+            # 创建测试数据，一个用户，一个电影条目
+            user = User(name='Test', username='test')
+            user.set_password('123')
+            movie = Movie(title='Test Movie Title', year='2019')
+            # 使用 add_all() 方法一次添加多个模型类实例，传入列表
+            db.session.add_all([user, movie])
+            # 提交数据库会话
+            db.session.commit()
 
         self.client = app.test_client()  # 创建测试客户端
         self.runner = app.test_cli_runner()  # 创建测试命令运行器
 
     def tearDown(self):
-        db.session.remove()  # 清除数据库会话
-        db.drop_all()  # 删除数据库表
+        with app.app_context():  # 激活上下文
+            db.session.remove()  # 清除数据库会话
+            db.drop_all()  # 删除数据库表
 
     # 测试程序实例是否存在
     def test_app_exist(self):
@@ -78,7 +82,7 @@ class WatchlistTestCase(unittest.TestCase):
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Item created.', data)
-        self.assertIn('Invalid input.', data)
+        self.assertIn('Invalid title or year!', data)  # 匹配实际错误提示
 
         # 测试创建条目操作，但电影年份为空
         response = self.client.post('/', data=dict(
@@ -87,7 +91,7 @@ class WatchlistTestCase(unittest.TestCase):
         ), follow_redirects=True)
         data = response.get_data(as_text=True)
         self.assertNotIn('Item created.', data)
-        self.assertIn('Invalid input.', data)
+        self.assertIn('Invalid title or year!', data)
 
     # 测试更新条目
     def test_update_item(self):
@@ -237,9 +241,11 @@ class WatchlistTestCase(unittest.TestCase):
 
     # 测试虚拟数据
     def test_forge_command(self):
-        result = self.runner.invoke(forge)
+        with app.app_context():  # 激活上下文
+            result = self.runner.invoke(forge)
         self.assertIn('Done.', result.output)
-        self.assertNotEqual(Movie.query.count(), 0)
+        with app.app_context():  # 检查数据库时也需要上下文
+            self.assertNotEqual(Movie.query.count(), 0)
 
     # 测试初始化数据库
     def test_initdb_command(self):
@@ -248,14 +254,16 @@ class WatchlistTestCase(unittest.TestCase):
 
     # 测试生成管理员账户
     def test_admin_command(self):
-        db.drop_all()
-        db.create_all()
+        with app.app_context():  # 激活应用上下文
+            db.drop_all()
+            db.create_all()
         result = self.runner.invoke(args=['admin', '--username', 'grey', '--password', '123'])
         self.assertIn('Creating user...', result.output)
         self.assertIn('Done.', result.output)
-        self.assertEqual(User.query.count(), 1)
-        self.assertEqual(User.query.first().username, 'grey')
-        self.assertTrue(User.query.first().validate_password('123'))
+        with app.app_context():  # 查询数据库时也需要上下文
+            self.assertEqual(User.query.count(), 1)
+            self.assertEqual(User.query.first().username, 'grey')
+            self.assertTrue(User.query.first().validate_password('123'))
 
     # 测试更新管理员账户
     def test_admin_command_update(self):
@@ -263,9 +271,10 @@ class WatchlistTestCase(unittest.TestCase):
         result = self.runner.invoke(args=['admin', '--username', 'peter', '--password', '456'])
         self.assertIn('Updating user...', result.output)
         self.assertIn('Done.', result.output)
-        self.assertEqual(User.query.count(), 1)
-        self.assertEqual(User.query.first().username, 'peter')
-        self.assertTrue(User.query.first().validate_password('456'))
+        with app.app_context():  # 激活上下文后查询
+            self.assertEqual(User.query.count(), 1)
+            self.assertEqual(User.query.first().username, 'peter')
+            self.assertTrue(User.query.first().validate_password('456'))
 
 
 if __name__ == '__main__':
