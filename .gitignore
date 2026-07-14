@@ -9,3 +9,14 @@ wheels/
 # Virtual environments
 .venv
 .vscode
+
+# Database
+*.db
+*.sqlite
+
+# Coverage
+.coverage
+htmlcov/
+
+# IDE
+.idea/
